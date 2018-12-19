@@ -31,24 +31,23 @@ def get_ip():
     return IP
 
 @app.route('/pic/<string:address>', methods= ["GET"])
-def here(address=None):
-    return send_from_directory(app.static_folder, 'images/123_Octavia_St.jpg', mimetype='image/jpg')
+def pic(address):
+    return app.send_static_file(address)
+
+# background process happening without any refreshing
+@app.route('/background_process_test', methods=['POST'])
+def background_process_test():
+    if request.method == 'POST':
+      direction_action = request.form.get('direction')
+      print "Direction"
+      print direction_action
+      print "End"
+    return "nothing"
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """Video streaming home page."""
-    if request.method == 'POST':
-            if request.form.get('up') == 'up':
-                # pass
-                # print("UP UP")
-                return render_template('up.html')
-            elif  request.form.get('down') == 'down':
-                # pass # do something else
-                # print("DOWN DOWN")
-                return render_template('down.html')
-            else:
-                # pass # unknown
-                return render_template('index.html')
     return render_template('index.html')
 
 
@@ -70,4 +69,4 @@ def video_feed():
 if __name__ == '__main__':
     my_ip = get_ip()
     sys.stderr.write(app.instance_path)
-    app.run(host=my_ip, threaded=True, debug=True)
+    app.run(host=my_ip, threaded=True)
